@@ -1,5 +1,7 @@
 """Sensor platform for powerpal."""
 
+from __future__ import annotations
+
 from datetime import date, datetime, timedelta, timezone
 from typing import Any, Final, cast, final
 
