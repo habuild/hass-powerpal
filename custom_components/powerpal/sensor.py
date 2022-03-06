@@ -39,7 +39,7 @@ class PowerpalSensor(CoordinatorEntity):
         """Return the native unit of measurement."""
         return None
     
-     @property
+    @property
     def device_class(self) -> str:
         """Return the device class."""
         return None
