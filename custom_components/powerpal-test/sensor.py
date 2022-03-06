@@ -219,7 +219,7 @@ class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
         return "mdi:clock-outline"
 
     @property
-    def native_value(self) -> StateType | datetime:
-        """Return the state."""
-        return super().native_value   
+    def device_class(self) -> int:
+        """Return the device class, if any."""
+        return SensorDeviceClass.TIMESTAMP  
     
