@@ -1,6 +1,6 @@
 {
-  "domain": "powerpal",
-  "name": "Powerpal",
+  "domain": "powerpal-test",
+  "name": "Powerpal-test",
   "documentation": "https://github.com/mindmelting/hass-powerpal",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/mindmelting/hass-powerpal/issues",
