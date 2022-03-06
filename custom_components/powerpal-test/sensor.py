@@ -215,4 +215,7 @@ class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
         return "mdi:clock-outline"
     
     
-    
+    @property
+    def native_unit_of_measurement(self) -> str:
+        """Return the native unit of measurement."""
+        return datetime.datetime
