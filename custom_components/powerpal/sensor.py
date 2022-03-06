@@ -1,14 +1,19 @@
 """Sensor platform for powerpal."""
+
+from datetime import date, datetime, timedelta, timezone
+from typing import Any, Final, cast, final
+
 from homeassistant.components.sensor import (
     SensorEntity,
-    STATE_CLASS_TOTAL_INCREASING,
-    STATE_CLASS_MEASUREMENT,
+    SensorDeviceClass,
+    SensorStateClass,
+    StateType
 )
+
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.const import ENERGY_KILO_WATT_HOUR, DEVICE_CLASS_ENERGY
+from homeassistant.const import ENERGY_KILO_WATT_HOUR, DEVICE_CLASS_ENERGY, POWER_KILO_WATT, DEVICE_CLASS_POWER, DEVICE_CLASS_MONETARY, CURRENCY_DOLLAR
 
 from .const import NAME, DOMAIN, ICON, CONF_DEVICE_ID, ATTRIBUTION
-
 
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
@@ -16,9 +21,11 @@ async def async_setup_entry(hass, entry, async_add_devices):
     entities = [
         PowerpalTotalConsumptionSensor(coordinator, entry),
         PowerpalLiveConsumptionSensor(coordinator, entry),
+        PowerpalTotalCostSensor(coordinator, entry),
+        PowerpalLastTimestampSensor(coordinator, entry),
+        PowerpalTariffPeriodSensor(coordinator, entry),
     ]
     async_add_devices(entities)
-
 
 class PowerpalSensor(CoordinatorEntity):
     """Powerpal Sensor class."""
@@ -30,13 +37,13 @@ class PowerpalSensor(CoordinatorEntity):
     @property
     def native_unit_of_measurement(self) -> str:
         """Return the native unit of measurement."""
-        return ENERGY_KILO_WATT_HOUR
-
-    @property
+        return None
+    
+     @property
     def device_class(self) -> str:
         """Return the device class."""
-        return DEVICE_CLASS_ENERGY
-
+        return None
+    
     @property
     def device_info(self):
         return {
@@ -54,12 +61,11 @@ class PowerpalSensor(CoordinatorEntity):
             "id": self.config_entry.data[CONF_DEVICE_ID],
             "integration": DOMAIN,
         }
-
+    
     @property
     def icon(self):
         """Return the icon of the sensor."""
         return ICON
-
 
 class PowerpalTotalConsumptionSensor(PowerpalSensor, SensorEntity):
     @property
@@ -75,12 +81,23 @@ class PowerpalTotalConsumptionSensor(PowerpalSensor, SensorEntity):
     @property
     def state_class(self) -> str:
         """Return the state class."""
-        return STATE_CLASS_TOTAL_INCREASING
-
+        return SensorStateClass.TOTAL_INCREASING
+    
     @property
     def native_value(self):
         """Return the native value of the sensor."""
         return self.coordinator.data.get("total_watt_hours") / 1000
+    
+    @property
+    def device_class(self) -> str:
+        """Return the device class."""
+        return DEVICE_CLASS_ENERGY
+    
+    @property
+    def native_unit_of_measurement(self) -> str:
+        """Return the native unit of measurement."""
+        return ENERGY_KILO_WATT_HOUR
+
 
 
 class PowerpalLiveConsumptionSensor(PowerpalSensor, SensorEntity):
@@ -93,13 +110,109 @@ class PowerpalLiveConsumptionSensor(PowerpalSensor, SensorEntity):
     def unique_id(self) -> str:
         """Return the unique id."""
         return f"powerpal-live-{self.config_entry.entry_id}"
+    
+    @property
+    def device_class(self) -> str:
+        """Return the device class."""
+        return SensorDeviceClass.POWER
 
     @property
     def state_class(self) -> str:
         """Return the state class."""
-        return STATE_CLASS_MEASUREMENT
+        return SensorStateClass.MEASUREMENT
 
     @property
     def native_value(self):
         """Return the native value of the sensor."""
         return (self.coordinator.data.get("last_reading_watt_hours") * 60) / 1000
+    
+    @property
+    def native_unit_of_measurement(self) -> str:
+        """Return the native unit of measurement."""
+        return POWER_KILO_WATT
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return "mdi:lightning-bolt-outline"
+    
+class PowerpalTotalCostSensor(PowerpalSensor, SensorEntity):
+    @property
+    def name(self) -> str:
+        """Return the name of the sensor."""
+        return "Powerpal Total Cost"
+
+    @property
+    def unique_id(self) -> str:
+        """Return the unique id."""
+        return f"powerpal-cost-{self.config_entry.entry_id}"
+
+    @property
+    def state_class(self) -> str:
+        """Return the state class."""
+        return SensorStateClass.TOTAL_INCREASING
+
+    @property
+    def native_value(self):
+        """Return the native value of the sensor."""
+        return (self.coordinator.data.get("total_cost"))
+            
+    @property
+    def device_class(self) -> str:
+        """Return the device class."""
+        return DEVICE_CLASS_MONETARY
+    
+    @property
+    def native_unit_of_measurement(self) -> str:
+        """Return the native unit of measurement."""
+        return CURRENCY_DOLLAR
+    
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return "mdi:currency-usd"
+
+class PowerpalTariffPeriodSensor(PowerpalSensor, SensorEntity):
+    @property
+    def name(self) -> str:
+        """Return the name of the sensor."""
+        return "Powerpal Tariff Period"
+
+    @property
+    def unique_id(self) -> str:
+        """Return the unique id."""
+        return f"powerpal-peak-{self.config_entry.entry_id}"
+    
+    @property
+    def native_value(self):
+        """Return the native value of the sensor."""
+        return (self.coordinator.data.get("is_peak"))
+    
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return "mdi:progress-clock"
+    
+class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
+    @property
+    def name(self) -> str:
+        """Return the name of the sensor."""
+        return "Powerpal Last Timestamp"
+
+    @property
+    def unique_id(self) -> str:
+        """Return the unique id."""
+        return f"powerpal-last-{self.config_entry.entry_id}"
+
+    @property
+    def native_value(self):
+        """Return the native value of the sensor."""
+        return (self.coordinator.data.get("last_reading_timestamp"))
+    
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return "mdi:clock-outline"
+
+        
+    
