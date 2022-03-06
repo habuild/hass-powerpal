@@ -218,10 +218,5 @@ class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
     
     
     
-    @property
-    def native_value(self) -> datetime | str | None:
-        """Return the state of the entity."""
-        if self._state_timestamp and self.device_class == SensorDeviceClass.TIMESTAMP:
-            return self._state_timestamp
-        return self._state
+    
     
