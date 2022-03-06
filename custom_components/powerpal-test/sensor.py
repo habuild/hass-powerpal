@@ -214,8 +214,5 @@ class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
         """Return the icon of the sensor."""
         return "mdi:clock-outline"
 
-    @property
-    def device_class(self) -> int:
-        """Return the device class, if any."""
-        return SensorDeviceClass.TIMESTAMP  
+     
     
