@@ -1,7 +1,7 @@
 """Constants for powerpal."""
 # Base component constants
 NAME = "Powerpal-test"
-DOMAIN = "powerpal"
+DOMAIN = "powerpal-test"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.2.0"
 ATTRIBUTION = "Data provided by https://readings.powerpal.net"
