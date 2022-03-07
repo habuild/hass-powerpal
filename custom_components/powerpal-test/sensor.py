@@ -209,7 +209,7 @@ class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
     @property
     def native_value(self):
         """Return the native value of the sensor."""
-        return (self.coordinator.data.get("last_reading_timestamp"))
+        return (self.coordinator.data.get("last_reading_timestamp") | datetime | as_local )
     
     @property
     def icon(self):
