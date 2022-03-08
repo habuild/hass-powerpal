@@ -207,15 +207,15 @@ class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
         return f"powerpal-last-{self.config_entry.entry_id}"
 
     @property
-    def native_value(self): 
-        """Return the native value of the sensor."""
-        ts = (self.coordinator.data.get("last_reading_timestamp")) 
-        return datetime.utcfromtimestamp(ts, tz(0) )
-    
-    @property
     def icon(self):
         """Return the icon of the sensor."""
         return "mdi:clock-outline"
+    
+    @property
+    def native_value(self): 
+        """Return the native value of the sensor."""
+        LRS = (self.coordinator.data.get("last_reading_timestamp"))
+        return datetime.fromtimestamp(LRS, tz=timezone.utc)
     
     # Shouldn't need this supplied in main sensor
     @property
