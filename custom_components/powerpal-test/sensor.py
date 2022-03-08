@@ -209,21 +209,13 @@ class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
     @property
     def native_value(self): 
         """Return the native value of the sensor."""
-        return (self.coordinator.data.get("last_reading_timestamp")) 
+        return (self.coordinator.data.get("last_reading_timestamp" + "z")) 
     
     @property
     def icon(self):
         """Return the icon of the sensor."""
         return "mdi:clock-outline"
     
-    @property
-    def device_class(self) -> str:
-        """Return the device class, if any."""
-        return SensorDeviceClass.TIMESTAMP
     
-    @property
-    def native_value(self) -> timestamp(0) | str | None:
-        """Return the state of the entity."""
-        return "datetime.datetime"
     
     
