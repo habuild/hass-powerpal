@@ -222,7 +222,7 @@ class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
         return SensorDeviceClass.TIMESTAMP
     
     @property
-    def native_value(self) -> datetime | str | None:
+    def native_value(self) -> utc_timestamp | str | None:
         """Return the state of the entity."""
         return "datetime.datetime"
     
