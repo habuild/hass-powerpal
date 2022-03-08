@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta, timezone, timestamp
+from datetime import date, datetime, timedelta, timezone
 from typing import Any, Final, cast, final
 
 from homeassistant.components.sensor import (
@@ -210,7 +210,7 @@ class PowerpalLastTimestampSensor(PowerpalSensor, SensorEntity):
     def native_value(self): 
         """Return the native value of the sensor."""
         ts = (self.coordinator.data.get("last_reading_timestamp")) 
-        return timestamp.utc(ts)
+        return datetime.utcfromtimestamp(ts)
     
     @property
     def icon(self):
